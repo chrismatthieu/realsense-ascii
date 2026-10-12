@@ -1,0 +1,14 @@
+#!/bin/zsh
+# Launch with the interpreter that can see this machine's librealsense build.
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")" && pwd)"
+PY="${PYTHON:-python3}"
+
+if ! "$PY" -c "import numpy, pyrealsense2" >/dev/null 2>&1; then
+  if [[ -x "$HOME/miniconda3/bin/python3" ]]; then
+    export PYTHONPATH="$HOME/Projects/librealsense/build/Release${PYTHONPATH:+:$PYTHONPATH}"
+    PY="$HOME/miniconda3/bin/python3"
+  fi
+fi
+
+exec "$PY" "$ROOT/realsense_ascii.py" "$@"
